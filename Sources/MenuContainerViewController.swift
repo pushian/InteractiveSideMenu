@@ -137,6 +137,8 @@ extension MenuContainerViewController {
      Controller from the right side will be visible.
      */
     public func hideSideMenu() {
+        debugPrint("didSelectRowAt hideSideMenu")
+
         dismissNavigationMenu()
     }
 
@@ -190,10 +192,19 @@ fileprivate extension MenuContainerViewController {
         let notification = Notification(name: Notification.Name("updateBKView"), object: convert(view: (self.currentContentViewController?.view)!), userInfo: nil)
         NotificationCenter.default.post(notification)
         
+//        if menuViewController == nil {
+//            fatalError("Invalid `menuViewController` value. It should not be nil")
+//        }
+//        present(menuViewController, animated: true, completion: nil)
+//        isShown = true
+        
         if menuViewController == nil {
-            fatalError("Invalid `menuViewController` value. It should not be nil")
+            fatalError("Invalid 'menuViewController' value. It should not be nil")
         }
-        present(menuViewController, animated: true, completion: nil)
+        DispatchQueue.main.async { [weak self] in
+            guard let menuViewController = self?.menuViewController else { return }
+            self?.present(menuViewController, animated: true, completion: nil)
+        }
         isShown = true
     }
     
@@ -201,7 +212,16 @@ fileprivate extension MenuContainerViewController {
      Dismisses left side menu.
      */
     func dismissNavigationMenu() {
-        self.dismiss(animated: true, completion: nil)
+        debugPrint("didSelectRowAt dismissNavigationMenu")
+
+//        self.dismiss(animated: true) {
+//            debugPrint("didSelectRowAt dismissed")
+//
+//        }
+//        isShown = false
+        DispatchQueue.main.async { [weak self] in
+            self?.dismiss(animated: true, completion: nil)
+        }
         isShown = false
     }
 }

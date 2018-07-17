@@ -94,7 +94,7 @@ extension SampleMenuViewController: UITableViewDelegate, UITableViewDataSource {
         guard let menuContainerViewController = self.menuContainerViewController else {
             return
         }
-
+        debugPrint("didSelectRowAt \(indexPath.row)")
         menuContainerViewController.selectContentViewController(menuContainerViewController.contentViewControllers[indexPath.row])
         menuContainerViewController.hideSideMenu()
     }
