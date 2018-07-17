@@ -90,7 +90,7 @@ open class MenuContainerViewController: UIViewController {
         )
 
         navigationMenuTransitionDelegate = MenuTransitioningDelegate(interactiveTransition: interactiveTransition)
-
+        //yangfan modification
         let screenEdgePanRecognizer = UIScreenEdgePanGestureRecognizer(
             target: navigationMenuTransitionDelegate.interactiveTransition,
             action: #selector(MenuInteractiveTransition.handlePanPresentation(recognizer:))
@@ -127,6 +127,8 @@ extension MenuContainerViewController {
      Shows left side menu.
      */
     public func showSideMenu() {
+//        let test =
+        
         presentNavigationMenu()
     }
 
@@ -138,6 +140,15 @@ extension MenuContainerViewController {
         dismissNavigationMenu()
     }
 
+    //yangfan modification
+    func convert(view: UIView) -> UIImage{
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.isOpaque, 0.0)
+        view.drawHierarchy(in: view.bounds, afterScreenUpdates: false)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        //        self.init(cgImage: )
+        return UIImage.init(cgImage: (image?.cgImage)!)
+    }
     /**
      Embeds menu item content view controller.
 
@@ -174,13 +185,18 @@ fileprivate extension MenuContainerViewController {
      Presents left side menu.
      */
     func presentNavigationMenu() {
+        
+        //yangfan modification
+        let notification = Notification(name: Notification.Name("updateBKView"), object: convert(view: (self.currentContentViewController?.view)!), userInfo: nil)
+        NotificationCenter.default.post(notification)
+        
         if menuViewController == nil {
             fatalError("Invalid `menuViewController` value. It should not be nil")
         }
         present(menuViewController, animated: true, completion: nil)
         isShown = true
     }
-
+    
     /**
      Dismisses left side menu.
      */
@@ -194,12 +210,14 @@ extension UIView {
     func addSubviewWithFullSizeConstraints(view : UIView) {
         insertSubviewWithFullSizeConstraints(view: view, atIndex: subviews.count)
     }
-
+    
     func insertSubviewWithFullSizeConstraints(view : UIView, atIndex: Int) {
         view.translatesAutoresizingMaskIntoConstraints = false
         insertSubview(view, at: atIndex)
 
-        let top = view.topAnchor.constraint(equalTo: self.topAnchor)
+        //yangfan modification
+        var top = view.topAnchor.constraint(equalTo: self.topAnchor)
+
         let leading = view.leadingAnchor.constraint(equalTo: self.leadingAnchor)
         let trailing = self.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         let bottom = self.bottomAnchor.constraint(equalTo: view.bottomAnchor)
